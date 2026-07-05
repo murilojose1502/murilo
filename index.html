@@ -1,0 +1,1560 @@
+html_content = """<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gem Icunim - O Melhor Lanche da Cidade</title>
+    <meta name="description" content="Peça os melhores hambúrgueres, lanches, porções e sobremesas na Gem Icunim. Entrega rápida e o melhor sabor da cidade.">
+    <meta property="og:title" content="Gem Icunim - O Melhor Lanche da Cidade">
+    <meta property="og:description" content="Peça os melhores hambúrgueres, lanches, porções e sobremesas na Gem Icunim.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gem-icunim.github.io">
+    <meta name="theme-color" content="#e67e22">
+    
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkdlbSBJY3VuaW0iLAogICJzaG9ydF9uYW1lIjogIkdlbUljdW5pbSIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiI2U2N2UyMiIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRUFBQUFCQU1BTUFBQUFDejM5b0FBQUFERmxEUVUxQ1FreE5SazlRVTFCSlZVVmZaMmx0WlhOMFpYSnphV05sY25SdmNtVnpkRzkwQUFBQUFFbEZUa1N1UW1jPSIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIgogICAgfQogIF0KfQ==">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #e67e22;
+            --secondary: #2c3e50;
+            --btn-bg: #e67e22;
+            --bg-main: #fafafa;
+            --text-main: #333333;
+            --menu-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark {
+            --bg-main: #121212;
+            --text-main: #f5f5f5;
+            --menu-bg: #1e1e1e;
+        }
+        .smooth-anim {
+            transition: all 0.3s ease-in-out;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #222;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        .sidebar-cart {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar-cart.open {
+            transform: translateX(0);
+        }
+        #loading {
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,0.9);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .dark #loading {
+            background: rgba(18,18,18,0.9);
+        }
+    </style>
+</head>
+<body class="smooth-anim">
+
+    <div id="loading">
+        <div class="text-center">
+            <i class="fas fa-spinner fa-spin text-5xl text-[--primary] mb-4"></i>
+            <h2 class="text-xl font-bold">Carregando Gem Icunim...</h2>
+        </div>
+    </div>
+
+    <header class="sticky top-0 z-40 bg-[--menu-bg] shadow-md transition-colors duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2 text-2xl font-bold text-[--primary]" id="storeLogoName">
+                <i class="fas fa-hamburger mr-1"></i> <span id="navStoreName">Gem Icunim</span>
+            </a>
+            
+            <nav class="hidden md:flex space-x-6 font-medium">
+                <a href="#" class="hover:text-[--primary] smooth-anim">Início</a>
+                <a href="#cardapio" class="hover:text-[--primary] smooth-anim">Cardápio</a>
+                <a href="#avaliacoes" class="hover:text-[--primary] smooth-anim">Avaliações</a>
+                <a href="#contato" class="hover:text-[--primary] smooth-anim">Contato</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-xl smooth-anim" title="Alternar Tema">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <button id="cartToggle" class="relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-xl smooth-anim">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" class="absolute top-0 right-0 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+                </button>
+                <button id="adminLoginBtn" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-xl smooth-anim" title="Painel Admin">
+                    <i class="fas fa-user-shield"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section id="banner" class="relative bg-cover bg-center h-[500px] flex items-center text-white" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80');">
+        <div class="container mx-auto px-4">
+            <h1 id="bannerTitle" class="text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-md">Gem Icunim</h1>
+            <p id="bannerSlogan" class="text-xl md:text-2xl mb-8 font-light max-w-xl drop-shadow-sm">"O melhor lanche da cidade."</p>
+            <div class="flex flex-wrap gap-4">
+                <a href="#cardapio" id="bannerBtn1" class="bg-[--btn-bg] hover:opacity-90 text-white font-bold px-6 py-3 rounded-xl shadow-lg smooth-anim text-center min-w-[140px]">Fazer Pedido</a>
+                <a href="#cardapio" id="bannerBtn2" class="bg-white hover:bg-gray-100 text-gray-900 font-bold px-6 py-3 rounded-xl shadow-lg smooth-anim text-center min-w-[140px]">Cardápio</a>
+                <a href="#" id="bannerBtnWhats" target="_blank" class="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg smooth-anim flex items-center justify-center space-x-2 min-w-[140px]">
+                    <i class="fab fa-whatsapp text-xl"></i> <span>WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div id="badgePromo" class="bg-gradient-to-r from-red-500 to-orange-500 p-6 rounded-2xl text-white shadow-md flex items-center justify-between cursor-pointer" onclick="filterSpecial('promo')">
+                <div>
+                    <h3 class="text-xl font-bold">Promoções Incríveis</h3>
+                    <p class="text-sm opacity-90">Descontos especiais de hoje</p>
+                </div>
+                <i class="fas fa-percentage text-4xl opacity-50"></i>
+            </div>
+            <div id="badgeBest" class="bg-gradient-to-r from-yellow-500 to-amber-600 p-6 rounded-2xl text-white shadow-md flex items-center justify-between cursor-pointer" onclick="filterSpecial('best')">
+                <div>
+                    <h3 class="text-xl font-bold">Mais Vendidos</h3>
+                    <p class="text-sm opacity-90">Os favoritos do público</p>
+                </div>
+                <i class="fas fa-fire text-4xl opacity-50"></i>
+            </div>
+            <div id="badgeFeatured" class="bg-gradient-to-r from-purple-500 to-indigo-600 p-6 rounded-2xl text-white shadow-md flex items-center justify-between cursor-pointer" onclick="filterSpecial('featured')">
+                <div>
+                    <h3 class="text-xl font-bold">Destaques</h3>
+                    <p class="text-sm opacity-90">Seleções exclusivas do chefe</p>
+                </div>
+                <i class="fas fa-star text-4xl opacity-50"></i>
+            </div>
+        </div>
+    </section>
+
+    <section id="cardapio" class="container mx-auto px-4 py-8 scroll-mt-20">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <h2 class="text-3xl font-bold border-l-4 border-[--primary] pl-3">Nosso Cardápio</h2>
+            
+            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                <div class="relative flex-1 sm:w-64">
+                    <input type="text" id="searchBar" placeholder="Pesquisar lanche..." class="w-full px-4 py-2 pl-10 rounded-xl border border-gray-300 dark:border-gray-700 bg-[--menu-bg] focus:outline-none focus:ring-2 focus:ring-[--primary]">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" id="priceFilter" placeholder="Preço Máx R$" class="w-28 px-3 py-2 rounded-xl border border-gray-300 dark:border-gray-700 bg-[--menu-bg] focus:outline-none focus:ring-2 focus:ring-[--primary]">
+                    <button onclick="clearFilters()" class="text-sm text-gray-500 hover:text-[--primary] px-2 smooth-anim">Limpar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex overflow-x-auto pb-3 mb-6 gap-2 no-scrollbar" id="categoriesBar">
+            </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="productsGrid">
+            </div>
+    </section>
+
+    <div id="cartSidebar" class="fixed top-0 right-0 h-full w-full sm:w-[450px] bg-[--menu-bg] shadow-2xl z-50 sidebar-cart flex flex-col">
+        <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center bg-[--primary] text-white">
+            <h3 class="text-xl font-bold"><i class="fas fa-shopping-bag mr-2"></i>Seu Carrinho</h3>
+            <button id="closeCart" class="text-2xl font-bold hover:opacity-80">&times;</button>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-4 space-y-4" id="cartItemsContainer">
+            </div>
+
+        <div class="p-4 border-t dark:border-gray-700 space-y-3 bg-gray-50 dark:bg-zinc-900">
+            <div class="flex justify-between text-sm">
+                <span>Subtotal:</span>
+                <span id="cartSubtotal">R$ 0,00</span>
+            </div>
+            <div class="flex justify-between text-sm">
+                <span>Taxa de Entrega:</span>
+                <span id="cartDelivery">R$ 0,00</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="text" id="couponInput" placeholder="Cupom de desconto" class="flex-1 px-3 py-1 text-sm border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                <button onclick="applyCoupon()" class="bg-gray-800 text-white dark:bg-gray-200 dark:text-black text-sm px-3 py-1 rounded-lg font-bold">Aplicar</button>
+            </div>
+            <div id="couponMessage" class="text-xs text-green-600 hidden"></div>
+            <div class="flex justify-between text-lg font-bold border-t dark:border-gray-700 pt-2 text-[--primary]">
+                <span>Total:</span>
+                <span id="cartTotal">R$ 0,00</span>
+            </div>
+            
+            <div class="space-y-2 mt-2 pt-2 border-t dark:border-gray-800 text-sm">
+                <input type="text" id="orderName" placeholder="Seu Nome *" class="w-full px-3 py-1.5 border rounded-lg bg-[--menu-bg] dark:border-gray-700" required>
+                <input type="text" id="orderAddress" placeholder="Endereço, Número e Bairro *" class="w-full px-3 py-1.5 border rounded-lg bg-[--menu-bg] dark:border-gray-700" required>
+            </div>
+
+            <button onclick="checkoutOrder()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl shadow-lg flex items-center justify-center space-x-2 smooth-anim mt-2">
+                <i class="fab fa-whatsapp text-xl"></i> <span>Finalizar e Enviar Pedido</span>
+            </button>
+        </div>
+    </div>
+
+    <section id="avaliacoes" class="container mx-auto px-4 py-12 border-t dark:border-gray-800 scroll-mt-20">
+        <h2 class="text-3xl font-bold text-center mb-2">Avaliações dos Clientes</h2>
+        <div class="flex justify-center items-center space-x-2 mb-8">
+            <div class="flex text-yellow-500 text-xl" id="averageStars"></div>
+            <span class="font-bold text-lg" id="averageText">0.0 (0 avaliações)</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-[--menu-bg] p-6 rounded-2xl shadow-md border dark:border-gray-800">
+                <h3 class="text-xl font-bold mb-4">Deixe seu Comentário</h3>
+                <form id="reviewForm" onsubmit="submitReview(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Nome *</label>
+                        <input type="text" id="reviewAuthor" class="w-full px-4 py-2 border rounded-xl bg-[--menu-bg] dark:border-gray-700" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Nota *</label>
+                        <div class="flex space-x-2 text-2xl text-gray-300" id="starRatingSelect">
+                            <i class="fas fa-star cursor-pointer hover:text-yellow-500" data-val="1"></i>
+                            <i class="fas fa-star cursor-pointer hover:text-yellow-500" data-val="2"></i>
+                            <i class="fas fa-star cursor-pointer hover:text-yellow-500" data-val="3"></i>
+                            <i class="fas fa-star cursor-pointer hover:text-yellow-500" data-val="4"></i>
+                            <i class="fas fa-star cursor-pointer hover:text-yellow-500" data-val="5"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Comentário *</label>
+                        <textarea id="reviewComment" rows="3" class="w-full px-4 py-2 border rounded-xl bg-[--menu-bg] dark:border-gray-700" required></textarea>
+                    </div>
+                    <button type="submit" class="bg-[--primary] text-white px-6 py-2 rounded-xl font-bold hover:opacity-90 smooth-anim">Enviar Avaliação</button>
+                </form>
+            </div>
+
+            <div class="space-y-4 max-h-[350px] overflow-y-auto pr-2" id="reviewsContainer">
+                </div>
+        </div>
+    </section>
+
+    <footer id="contato" class="bg-gray-900 text-white pt-12 pb-6 mt-12 scroll-mt-20">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div>
+                <h3 class="text-2xl font-bold text-[--primary] mb-4" id="footerStoreName">Gem Icunim</h3>
+                <p class="text-gray-400 text-sm mb-4" id="footerSlogan">O melhor lanche da cidade.</p>
+                <div class="space-y-2 text-sm text-gray-300">
+                    <p><i class="fas fa-clock mr-2 text-[--primary]"></i> <span id="infoHorario">Segunda a Domingo, 18h às 23h</span></p>
+                    <p><i class="fas fa-motorcycle mr-2 text-[--primary]"></i> Taxa de Entrega: <span id="infoTaxa">R$ 5,00</span></p>
+                    <p><i class="fas fa-hourglass-half mr-2 text-[--primary]"></i> Tempo estimado: <span id="infoTempo">30-40 min</span></p>
+                    <p><i class="fas fa-dollar-sign mr-2 text-[--primary]"></i> Pedido mínimo: <span id="infoMinimo">R$ 15,00</span></p>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-xl font-bold mb-4">Contato e Endereço</h3>
+                <div class="space-y-2 text-sm text-gray-300 mb-4">
+                    <p><i class="fas fa-map-marker-alt mr-2 text-[--primary]"></i> <span id="infoAddress">Rua dos Lanches, 123 - Centro</span></p>
+                    <p><i class="fas fa-phone mr-2 text-[--primary]"></i> <span id="infoTelefone">(11) 99999-9999</span></p>
+                    <p><i class="fas fa-envelope mr-2 text-[--primary]"></i> <span id="infoEmail">contato@gemicunim.com</span></p>
+                </div>
+                <div class="flex space-x-4 text-xl" id="socialRow">
+                    </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold mb-4">Localização</h3>
+                <div class="w-full h-40 rounded-xl overflow-hidden shadow-md">
+                    <iframe id="googleMapFrame" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.197587462444!2d-46.6564943!3d-23.5616793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDMzJzQyLjAiUyA0NsKwMzknMjMuNCJX!5e0!3m2!1spt-BR!2sbr!4v1625000000000!5m2!1spt-BR!2sbr" class="w-full h-full border-0" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+                <div class="mt-2 text-center text-xs text-gray-500">
+                    Abaixo apresentamos o QR Code Oficial do WhatsApp para pedidos rápidos.
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-800 pt-6 text-center text-gray-500 text-sm">
+            <p>&copy; 2026 <span id="footerCopyName">Gem Icunim</span>. Todos os direitos reservados. Feito com ❤️</p>
+        </div>
+    </footer>
+
+    <a href="#" id="whatsFloatingBtn" target="_blank" class="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl z-40 smooth-anim transition-transform hover:scale-110">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    <button id="scrollToTopBtn" class="fixed bottom-24 right-6 bg-[--primary] text-white w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-xl z-40 opacity-0 pointer-events-none smooth-anim">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div id="notification" class="fixed top-6 right-6 bg-gray-900 text-white px-6 py-3 rounded-xl shadow-2xl z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 flex items-center space-x-2">
+        <span id="notificationText">Mensagem</span>
+    </div>
+
+    <div id="error404Page" class="fixed inset-0 bg-white dark:bg-zinc-950 z-50 flex items-center justify-center hidden">
+        <div class="text-center p-6 max-w-md">
+            <h1 class="text-9xl font-black text-[--primary]">404</h1>
+            <h2 class="text-3xl font-bold mt-4 mb-2">Página não encontrada!</h2>
+            <p class="text-gray-500 dark:text-gray-400 mb-6">O produto ou a categoria buscada não está mais disponível no banco de dados.</p>
+            <button onclick="close404()" class="bg-[--primary] text-white px-6 py-3 rounded-xl font-bold shadow-lg">Voltar ao Cardápio</button>
+        </div>
+    </div>
+
+    <div id="adminPanelModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden overflow-y-auto p-2 sm:p-4">
+        <div id="adminLoginBox" class="bg-[--menu-bg] p-6 rounded-2xl shadow-2xl w-full max-w-md border dark:border-gray-800 relative">
+            <button onclick="closeAdminPanel()" class="absolute top-4 right-4 text-2xl font-bold hover:text-red-500">&times;</button>
+            <h3 class="text-2xl font-bold mb-6 text-center"><i class="fas fa-lock mr-2 text-[--primary]"></i>Acesso Restrito</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Usuário</label>
+                    <input type="text" id="adminUser" class="w-full px-4 py-2 border rounded-xl bg-[--menu-bg] dark:border-gray-700" placeholder="admin">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Senha</label>
+                    <input type="password" id="adminPass" class="w-full px-4 py-2 border rounded-xl bg-[--menu-bg] dark:border-gray-700" placeholder="••••••••">
+                </div>
+                <button onclick="attemptAdminLogin()" class="w-full bg-[--primary] text-white font-bold py-2.5 rounded-xl hover:opacity-90 smooth-anim mt-2">Entrar</button>
+            </div>
+        </div>
+
+        <div id="adminWorkspace" class="bg-[--menu-bg] w-full max-w-6xl rounded-2xl shadow-2xl border dark:border-gray-800 flex flex-col h-[90vh] hidden">
+            <div class="p-4 border-b dark:border-gray-700 bg-gray-800 text-white flex justify-between items-center rounded-t-2xl">
+                <div class="flex items-center space-x-3">
+                    <span class="font-bold text-lg"><i class="fas fa-tachometer-alt mr-2 text-[--primary]"></i>Painel Administrativo</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="logoutAdmin()" class="bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg text-xs font-bold smooth-anim">Sair</button>
+                    <button onclick="closeAdminPanel()" class="text-2xl font-bold hover:text-gray-400">&times;</button>
+                </div>
+            </div>
+
+            <div class="flex flex-1 overflow-hidden">
+                <div class="w-48 bg-gray-50 dark:bg-zinc-900 border-r dark:border-gray-700 overflow-y-auto flex flex-col text-sm">
+                    <button onclick="switchAdminTab('dash')" class="admin-tab-btn px-4 py-3 text-left font-semibold border-b dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800 text-[--primary]" data-tab="dash"><i class="fas fa-chart-line mr-2"></i>Dashboard</button>
+                    <button onclick="switchAdminTab('prods')" class="admin-tab-btn px-4 py-3 text-left font-semibold border-b dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800" data-tab="prods"><i class="fas fa-hamburger mr-2"></i>Produtos</button>
+                    <button onclick="switchAdminTab('orders')" class="admin-tab-btn px-4 py-3 text-left font-semibold border-b dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800" data-tab="orders"><i class="fas fa-clock mr-2"></i>Pedidos</button>
+                    <button onclick="switchAdminTab('clients')" class="admin-tab-btn px-4 py-3 text-left font-semibold border-b dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800" data-tab="clients"><i class="fas fa-users mr-2"></i>Clientes</button>
+                    <button onclick="switchAdminTab('coupons')" class="admin-tab-btn px-4 py-3 text-left font-semibold border-b dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800" data-tab="coupons"><i class="fas fa-ticket-alt mr-2"></i>Cupons</button>
+                    <button onclick="switchAdminTab('banner')" class="admin-tab-btn px-4 py-3 text-left font-semibold border-b dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800" data-tab="banner"><i class="fas fa-image mr-2"></i>Banner</button>
+                    <button onclick="switchAdminTab('social')" class="admin-tab-btn px-4 py-3 text-left font-semibold border-b dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800" data-tab="social"><i class="fas fa-share-alt mr-2"></i>Redes Sociais</button>
+                    <button onclick="switchAdminTab('storeinfo')" class="admin-tab-btn px-4 py-3 text-left font-semibold border-b dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800" data-tab="storeinfo"><i class="fas fa-store mr-2"></i>Loja Info</button>
+                    <button onclick="switchAdminTab('colors')" class="admin-tab-btn px-4 py-3 text-left font-semibold border-b dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-800" data-tab="colors"><i class="fas fa-palette mr-2"></i>Cores App</button>
+                    <button onclick="switchAdminTab('config')" class="admin-tab-btn px-4 py-3 text-left font-semibold hover:bg-gray-200 dark:hover:bg-gray-800" data-tab="config"><i class="fas fa-cogs mr-2"></i>Configurações</button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-4 md:p-6" id="adminTabContent">
+                    
+                    <div id="adminTab_dash" class="admin-tab-view space-y-6">
+                        <h4 class="text-xl font-bold mb-4">Métricas Gerais e Indicadores</h4>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-gray-100 dark:bg-zinc-800 p-4 rounded-xl shadow-sm border dark:border-gray-700">
+                                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase block">Quantidade Pedidos</span>
+                                <span class="text-2xl font-black text-[--primary]" id="statOrdersCount">0</span>
+                            </div>
+                            <div class="bg-gray-100 dark:bg-zinc-800 p-4 rounded-xl shadow-sm border dark:border-gray-700">
+                                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase block">Produtos Cadastrados</span>
+                                <span class="text-2xl font-black text-blue-500" id="statProductsCount">0</span>
+                            </div>
+                            <div class="bg-gray-100 dark:bg-zinc-800 p-4 rounded-xl shadow-sm border dark:border-gray-700">
+                                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase block">Clientes Únicos</span>
+                                <span class="text-2xl font-black text-green-500" id="statClientsCount">0</span>
+                            </div>
+                            <div class="bg-gray-100 dark:bg-zinc-800 p-4 rounded-xl shadow-sm border dark:border-gray-700">
+                                <span class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase block">Receita Estimada</span>
+                                <span class="text-2xl font-black text-purple-500" id="statRevenue">R$ 0,00</span>
+                            </div>
+                        </div>
+                        <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-xl text-sm">
+                            <p class="font-bold"><i class="fas fa-info-circle mr-2"></i>Ambiente de Administração Local</p>
+                            <p class="text-gray-600 dark:text-gray-400 mt-1">Todas as alterações executadas são aplicadas instantaneamente e salvas no LocalStorage de forma resiliente.</p>
+                        </div>
+                    </div>
+
+                    <div id="adminTab_prods" class="admin-tab-view space-y-6 hidden">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xl font-bold">Gestão do Cardápio de Produtos</h4>
+                            <button onclick="openProductFormModal()" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-2 rounded-xl flex items-center space-x-1"><i class="fas fa-plus"></i> <span>Novo Produto</span></button>
+                        </div>
+                        <div class="overflow-x-auto border dark:border-gray-700 rounded-xl">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-100 dark:bg-zinc-800 uppercase font-bold text-gray-600 dark:text-gray-400">
+                                        <th class="p-3">Foto</th>
+                                        <th class="p-3">Nome</th>
+                                        <th class="p-3">Categoria</th>
+                                        <th class="p-3">Preço</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminProductsTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="adminTab_orders" class="admin-tab-view space-y-4 hidden">
+                        <h4 class="text-xl font-bold">Histórico e Controle de Pedidos</h4>
+                        <div class="overflow-x-auto border dark:border-gray-700 rounded-xl">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-100 dark:bg-zinc-800 uppercase font-bold text-gray-600 dark:text-gray-400">
+                                        <th class="p-3">ID / Data</th>
+                                        <th class="p-3">Cliente</th>
+                                        <th class="p-3">Itens</th>
+                                        <th class="p-3">Total</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminOrdersTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="adminTab_clients" class="admin-tab-view space-y-4 hidden">
+                        <h4 class="text-xl font-bold">Lista de Clientes Registrados</h4>
+                        <div class="overflow-x-auto border dark:border-gray-700 rounded-xl">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-100 dark:bg-zinc-800 uppercase font-bold text-gray-600 dark:text-gray-400">
+                                        <th class="p-3">Nome</th>
+                                        <th class="p-3">Endereço Cadastrado</th>
+                                        <th class="p-3 text-center">Pedidos Efetuados</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminClientsTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="adminTab_coupons" class="admin-tab-view space-y-4 hidden">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xl font-bold">Cupons de Desconto</h4>
+                            <button onclick="addCouponPrompt()" class="bg-green-600 hover:bg-green-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg"><i class="fas fa-plus mr-1"></i>Criar Cupom</button>
+                        </div>
+                        <div class="overflow-x-auto border dark:border-gray-700 rounded-xl">
+                            <table class="w-full text-left border-collapse text-xs">
+                                <thead>
+                                    <tr class="bg-gray-100 dark:bg-zinc-800 uppercase font-bold text-gray-600 dark:text-gray-400">
+                                        <th class="p-3">Código</th>
+                                        <th class="p-3">Desconto (%)</th>
+                                        <th class="p-3 text-center">Remover</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminCouponsTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="adminTab_banner" class="admin-tab-view space-y-4 hidden">
+                        <h4 class="text-xl font-bold">Configurações do Banner Principal</h4>
+                        <div class="space-y-3 max-w-lg text-xs">
+                            <div>
+                                <label class="block font-semibold mb-1">Título do Banner</label>
+                                <input type="text" id="cfgBannerTitle" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Slogan do Banner</label>
+                                <input type="text" id="cfgBannerSlogan" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">URL da Imagem de Fundo (Unsplash / Imgur)</label>
+                                <input type="text" id="cfgBannerImg" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <button onclick="saveBannerConfig()" class="bg-[--primary] text-white px-4 py-2 rounded-lg font-bold">Salvar Alterações</button>
+                        </div>
+                    </div>
+
+                    <div id="adminTab_social" class="admin-tab-view space-y-4 hidden">
+                        <h4 class="text-xl font-bold">Canais e Links de Redes Sociais</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <label class="block font-semibold mb-1">WhatsApp Número (Apenas números com DDD)</label>
+                                <input type="text" id="cfgSocialWhats" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Instagram URL</label>
+                                <input type="text" id="cfgSocialInsta" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Facebook URL</label>
+                                <input type="text" id="cfgSocialFace" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">TikTok URL</label>
+                                <input type="text" id="cfgSocialTik" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">YouTube URL</label>
+                                <input type="text" id="cfgSocialYou" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">E-mail Comercial</label>
+                                <input type="text" id="cfgSocialEmail" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Telefone de Contato</label>
+                                <input type="text" id="cfgSocialTel" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                        </div>
+                        <button onclick="saveSocialConfig()" class="bg-[--primary] text-white px-4 py-2 rounded-lg font-bold text-xs mt-2">Salvar Links</button>
+                    </div>
+
+                    <div id="adminTab_storeinfo" class="admin-tab-view space-y-4 hidden">
+                        <h4 class="text-xl font-bold">Informações da Empresa e Delivery</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <label class="block font-semibold mb-1">Nome da Loja</label>
+                                <input type="text" id="cfgStoreName" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Endereço Completo</label>
+                                <input type="text" id="cfgStoreAddress" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Cidade</label>
+                                <input type="text" id="cfgStoreCity" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">CEP</label>
+                                <input type="text" id="cfgStoreCep" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Horário de Funcionamento</label>
+                                <input type="text" id="cfgStoreHorario" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Taxa de Entrega (R$)</label>
+                                <input type="number" id="cfgStoreTaxa" step="0.01" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Pedido Mínimo (R$)</label>
+                                <input type="number" id="cfgStoreMinimo" step="0.01" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Tempo Médio de Entrega (minutos)</label>
+                                <input type="text" id="cfgStoreTempo" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                        </div>
+                        <button onclick="saveStoreInfoConfig()" class="bg-[--primary] text-white px-4 py-2 rounded-lg font-bold text-xs mt-2">Salvar Informações</button>
+                    </div>
+
+                    <div id="adminTab_colors" class="admin-tab-view space-y-4 hidden">
+                        <h4 class="text-xl font-bold">Personalização do Visual e Paleta de Cores</h4>
+                        <div class="grid grid-cols-2 gap-4 max-w-sm text-xs">
+                            <div>
+                                <label class="block font-semibold mb-1">Cor Principal</label>
+                                <input type="color" id="clrPrimary" class="w-full h-10 border rounded-lg p-1 bg-white">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Cor dos Botões</label>
+                                <input type="color" id="clrBtn" class="w-full h-10 border rounded-lg p-1 bg-white">
+                            </div>
+                        </div>
+                        <button onclick="saveColorsConfig()" class="bg-[--primary] text-white px-4 py-2 rounded-lg font-bold text-xs mt-2">Aplicar Layout</button>
+                    </div>
+
+                    <div id="adminTab_config" class="admin-tab-view space-y-4 hidden">
+                        <h4 class="text-xl font-bold">Credenciais e Gestão Segura de Banco de Dados</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs max-w-xl border-b dark:border-gray-700 pb-4 mb-4">
+                            <div>
+                                <label class="block font-semibold mb-1">Novo Nome de Usuário Admin</label>
+                                <input type="text" id="cfgAdminUser" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div>
+                                <label class="block font-semibold mb-1">Nova Senha Admin</label>
+                                <input type="password" id="cfgAdminPass" class="w-full px-3 py-2 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                            </div>
+                            <div class="md:col-span-2">
+                                <button onclick="saveAdminCredentials()" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg font-bold">Alterar Login</button>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <h5 class="font-bold text-sm">Backup e Restauração de Dados (JSON)</h5>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="exportDatabaseJSON()" class="bg-gray-800 text-white px-3 py-2 rounded-lg font-bold"><i class="fas fa-download mr-1"></i>Exportar JSON</button>
+                                <label class="bg-gray-200 dark:bg-zinc-800 px-3 py-2 rounded-lg font-bold cursor-pointer inline-block border dark:border-gray-700">
+                                    <i class="fas fa-upload mr-1"></i>Importar JSON
+                                    <input type="file" id="importJsonFile" class="hidden" onchange="importDatabaseJSON(event)">
+                                </label>
+                                <button onclick="clearDatabaseFull()" class="bg-red-600 text-white px-3 py-2 rounded-lg font-bold"><i class="fas fa-trash-alt mr-1"></i>Limpar Banco de Dados</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="productCrudModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden p-2">
+        <div class="bg-[--menu-bg] p-6 rounded-2xl w-full max-w-md border dark:border-gray-800 space-y-4 text-xs max-h-[90vh] overflow-y-auto relative">
+            <button onclick="closeProductFormModal()" class="absolute top-4 right-4 text-xl font-bold">&times;</button>
+            <h4 class="text-lg font-bold" id="productModalTitle">Adicionar Novo Lanche</h4>
+            <input type="hidden" id="crudProdId">
+            <div>
+                <label class="block font-semibold mb-1">Nome do Produto *</label>
+                <input type="text" id="crudProdName" class="w-full px-3 py-1.5 border rounded-lg bg-[--menu-bg] dark:border-gray-700" required>
+            </div>
+            <div>
+                <label class="block font-semibold mb-1">Categoria *</label>
+                <select id="crudProdCategory" class="w-full px-3 py-1.5 border rounded-lg bg-[--menu-bg] dark:border-gray-700"></select>
+            </div>
+            <div>
+                <label class="block font-semibold mb-1">URL da Imagem *</label>
+                <input type="text" id="crudProdImg" class="w-full px-3 py-1.5 border rounded-lg bg-[--menu-bg] dark:border-gray-700" required>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="block font-semibold mb-1">Preço Normal (R$) *</label>
+                    <input type="number" id="crudProdPrice" step="0.01" class="w-full px-3 py-1.5 border rounded-lg bg-[--menu-bg] dark:border-gray-700" required>
+                </div>
+                <div>
+                    <label class="block font-semibold mb-1">Status Especial</label>
+                    <select id="crudProdStatus" class="w-full px-3 py-1.5 border rounded-lg bg-[--menu-bg] dark:border-gray-700">
+                        <option value="normal">Normal</option>
+                        <option value="promo">Em Promoção</option>
+                        <option value="best">Mais Vendido</option>
+                        <option value="featured">Destaque</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="block font-semibold mb-1">Descrição detalhada / Ingredientes *</label>
+                <textarea id="crudProdDesc" rows="3" class="w-full px-3 py-1.5 border rounded-lg bg-[--menu-bg] dark:border-gray-700" required></textarea>
+            </div>
+            <button onclick="saveProductCrudForm()" class="w-full bg-green-600 text-white font-bold py-2 rounded-lg text-sm">Salvar Registro</button>
+        </div>
+    </div>
+
+    <script>
+        const swCode = `
+            const CACHE_NAME = 'gem-icunim-v1';
+            const ASSETS = [
+                '/',
+                '/index.html'
+            ];
+            self.addEventListener('install', e => {
+                e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS)));
+            });
+            self.addEventListener('fetch', e => {
+                e.respondWith(caches.match(e.request).then(response => response || fetch(e.request)));
+            });
+        `;
+        if ('serviceWorker' in navigator) {
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error:', err));
+        }
+    </script>
+
+    <script>
+        // System Architectural Declarations & Default Core Standard Datasets
+        const DEFAULT_CATEGORIES = ["Hambúrgueres", "X-Burguer", "X-Salada", "X-Bacon", "X-Tudo", "Hot Dog", "Porções", "Bebidas", "Sobremesas"];
+        
+        const DEFAULT_PRODUCTS = [
+            { id: 1, name: "Gem Classic Burger", category: "Hambúrgueres", price: 24.90, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80", status: "featured", desc: "Hambúrguer artesanal de 150g, queijo cheddar derretido, alface, tomate e maionese especial da casa." },
+            { id: 2, name: "X-Bacon Premium", category: "X-Bacon", price: 29.90, img: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=500&q=80", status: "best", desc: "Muito bacon crocante, blend de carne de 150g, queijo prato duplo e molho barbecue artesanal." },
+            { id: 3, name: "X-Tudo Monstro", category: "X-Tudo", price: 34.90, img: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=500&q=80", status: "promo", desc: "Hambúrguer, presunto, queijo, ovo, bacon, salsicha, alface, tomate e batata palha." },
+            { id: 4, name: "Hot Dog Especial", category: "Hot Dog", price: 18.90, img: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=500&q=80", status: "normal", desc: "Duas salsichas de qualidade, purê de batata caseiro, vinagrete, maionese, ketchup e batata palha." },
+            { id: 5, name: "Porção Batata Frita Grande", category: "Porções", price: 22.00, img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=500&q=80", status: "normal", desc: "Batatas fritas super crocantes acompanhadas de maionese verde artesanal." },
+            { id: 6, name: "Coca-Cola Lata 350ml", category: "Bebidas", price: 6.00, img: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80", status: "normal", desc: "Refrigerante lata super gelado." },
+            { id: 7, name: "Brownie com Sorvete", category: "Sobremesas", price: 16.50, img: "https://images.unsplash.com/photo-1564355808539-22fda35bed7e?auto=format&fit=crop&w=500&q=80", status: "promo", desc: "Brownie de chocolate quente com uma bola de sorvete de creme e calda de chocolate." }
+        ];
+
+        const DEFAULT_STORE_INFO = {
+            name: "Gem Icunim", slogan: "O melhor lanche da cidade.",
+            address: "Rua dos Lanches, 123", city: "São Paulo", cep: "01000-000",
+            horario: "Segunda a Domingo, 18h às 23h", taxa: 5.00, minimo: 15.00, tempo: "30-40 min"
+        };
+
+        const DEFAULT_SOCIAL = { whats: "5511999999999", insta: "https://instagram.com", face: "https://facebook.com", tik: "https://tiktok.com", you: "https://youtube.com", email: "contato@gemicunim.com", tel: "(11) 99999-9999" };
+        const DEFAULT_BANNER = { title: "Gem Icunim", slogan: "O melhor lanche da cidade.", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80" };
+        const DEFAULT_CORES = { primary: "#e67e22", btn: "#e67e22" };
+        const DEFAULT_CREDENTIALS = { user: "admin", pass: "admin123" };
+
+        // App Reactive State Controller Data
+        let db = {};
+        let cart = [];
+        let activeCategory = "All";
+        let specialFilter = null;
+        let selectedReviewStars = 5;
+
+        // XSS Protection & Sanitization Helper
+        function sanitize(str) {
+            if (typeof str !== 'string') return str;
+            return str.replace(/[&<>"']/g, function(m) {
+                switch (m) {
+                    case '&': return '&amp;';
+                    case '<': return '&lt;';
+                    case '>': return '&gt;';
+                    case '"': return '&quot;';
+                    case "'": return '&#039;';
+                }
+            });
+        }
+
+        // Initialize LocalStorage Database Safely
+        function initDatabase() {
+            db.categories = DEFAULT_CATEGORIES;
+            db.products = JSON.parse(localStorage.getItem('gi_products')) || DEFAULT_PRODUCTS;
+            db.storeInfo = JSON.parse(localStorage.getItem('gi_storeinfo')) || DEFAULT_STORE_INFO;
+            db.social = JSON.parse(localStorage.getItem('gi_social')) || DEFAULT_SOCIAL;
+            db.banner = JSON.parse(localStorage.getItem('gi_banner')) || DEFAULT_BANNER;
+            db.cores = JSON.parse(localStorage.getItem('gi_cores')) || DEFAULT_CORES;
+            db.credentials = JSON.parse(localStorage.getItem('gi_credentials')) || DEFAULT_CREDENTIALS;
+            db.coupons = JSON.parse(localStorage.getItem('gi_coupons')) || [{ code: "DEZ", discount: 10 }];
+            db.orders = JSON.parse(localStorage.getItem('gi_orders')) || [];
+            db.reviews = JSON.parse(localStorage.getItem('gi_reviews')) || [
+                { author: "Carlos Silva", stars: 5, comment: "Melhor hambúrguer artesanal que já comi! Chegou super quente.", date: "01/07/2026" },
+                { author: "Ana Souza", stars: 4, comment: "Muito gostoso, entrega rápida. Recomendo o X-Bacon!", date: "03/07/2026" }
+            ];
+            db.favorites = JSON.parse(localStorage.getItem('gi_favorites')) || [];
+            saveAllToStorage();
+        }
+
+        function saveAllToStorage() {
+            localStorage.setItem('gi_products', JSON.stringify(db.products));
+            localStorage.setItem('gi_storeinfo', JSON.stringify(db.storeInfo));
+            localStorage.setItem('gi_social', JSON.stringify(db.social));
+            localStorage.setItem('gi_banner', JSON.stringify(db.banner));
+            localStorage.setItem('gi_cores', JSON.stringify(db.cores));
+            localStorage.setItem('gi_credentials', JSON.stringify(db.credentials));
+            localStorage.setItem('gi_coupons', JSON.stringify(db.coupons));
+            localStorage.setItem('gi_orders', JSON.stringify(db.orders));
+            localStorage.setItem('gi_reviews', JSON.stringify(db.reviews));
+            localStorage.setItem('gi_favorites', JSON.stringify(db.favorites));
+        }
+
+        // Render Application UI Elements dynamically based on Active State
+        function renderUI() {
+            // Document Title & Dynamic Meta Configuration Styles
+            document.title = `${db.storeInfo.name} - ${db.storeInfo.slogan}`;
+            document.documentElement.style.setProperty('--primary', db.cores.primary);
+            document.documentElement.style.setProperty('--btn-bg', db.cores.btn);
+
+            // Store Details Elements Binding
+            document.getElementById('navStoreName').innerText = db.storeInfo.name;
+            document.getElementById('bannerTitle').innerText = db.banner.title;
+            document.getElementById('bannerSlogan').innerText = db.banner.slogan;
+            document.getElementById('banner').style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${db.banner.img}')`;
+            
+            // Footer data fields mapping
+            document.getElementById('footerStoreName').innerText = db.storeInfo.name;
+            document.getElementById('footerSlogan').innerText = db.storeInfo.slogan;
+            document.getElementById('infoHorario').innerText = db.storeInfo.horario;
+            document.getElementById('infoTaxa').innerText = `R$ ${parseFloat(db.storeInfo.taxa).toFixed(2)}`;
+            document.getElementById('infoTempo').innerText = db.storeInfo.tempo;
+            document.getElementById('infoMinimo').innerText = `R$ ${parseFloat(db.storeInfo.minimo).toFixed(2)}`;
+            document.getElementById('infoAddress').innerText = `${db.storeInfo.address}, ${db.storeInfo.city}`;
+            document.getElementById('infoTelefone').innerText = db.social.tel;
+            document.getElementById('infoEmail').innerText = db.social.email;
+            document.getElementById('footerCopyName').innerText = db.storeInfo.name;
+
+            // Direct WhatsApp buttons wiring linking setup
+            const textWhats = encodeURIComponent(`Olá! Gostaria de consultar o cardápio.`);
+            const fullWhatsLink = `https://wa.me/${db.social.whats}?text=${textWhats}`;
+            document.getElementById('bannerBtnWhats').href = fullWhatsLink;
+            document.getElementById('whatsFloatingBtn').href = fullWhatsLink;
+
+            renderSocialLinks();
+            renderCategoriesBar();
+            renderProductsGrid();
+            renderReviews();
+            updateCartSummary();
+        }
+
+        function renderSocialLinks() {
+            const container = document.getElementById('socialRow');
+            container.innerHTML = '';
+            const links = [
+                { icon: 'fab fa-whatsapp', val: `https://wa.me/${db.social.whats}` },
+                { icon: 'fab fa-instagram', val: db.social.insta },
+                { icon: 'fab fa-facebook', val: db.social.face },
+                { icon: 'fab fa-tiktok', val: db.social.tik },
+                { icon: 'fab fa-youtube', val: db.social.you }
+            ];
+            links.forEach(l => {
+                if (l.val && l.val.length > 5) {
+                    container.innerHTML += `<a href="${l.val}" target="_blank" class="hover:text-[--primary] smooth-anim"><i class="${l.icon}"></i></a>`;
+                }
+            });
+        }
+
+        function renderCategoriesBar() {
+            const bar = document.getElementById('categoriesBar');
+            bar.innerHTML = `<button onclick="setCategory('All')" class="px-4 py-1.5 rounded-full font-semibold text-sm whitespace-nowrap smooth-anim ${activeCategory === 'All' ? 'bg-[--primary] text-white' : 'bg-gray-200 dark:bg-zinc-800 text-gray-700 dark:text-gray-300'}">Todos</button>`;
+            db.categories.forEach(cat => {
+                const act = activeCategory === cat;
+                bar.innerHTML += `<button onclick="setCategory('${cat}')" class="px-4 py-1.5 rounded-full font-semibold text-sm whitespace-nowrap smooth-anim ${act ? 'bg-[--primary] text-white' : 'bg-gray-200 dark:bg-zinc-800 text-gray-700 dark:text-gray-300'}">${cat}</button>`;
+            });
+        }
+
+        function setCategory(cat) {
+            activeCategory = cat;
+            specialFilter = null;
+            renderCategoriesBar();
+            renderProductsGrid();
+        }
+
+        function filterSpecial(type) {
+            specialFilter = type;
+            activeCategory = "All";
+            renderCategoriesBar();
+            renderProductsGrid();
+            document.getElementById('cardapio').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearFilters() {
+            activeCategory = "All";
+            specialFilter = null;
+            document.getElementById('searchBar').value = '';
+            document.getElementById('priceFilter').value = '';
+            renderCategoriesBar();
+            renderProductsGrid();
+        }
+
+        function renderProductsGrid() {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            const searchVal = document.getElementById('searchBar').value.toLowerCase();
+            const maxPrice = parseFloat(document.getElementById('priceFilter').value) || Infinity;
+
+            let filtered = db.products.filter(p => {
+                const matchCat = (activeCategory === "All") || (p.category === activeCategory);
+                const matchSpec = !specialFilter || (p.status === specialFilter);
+                const matchSearch = p.name.toLowerCase().includes(searchVal) || p.desc.toLowerCase().includes(searchVal);
+                const matchPrice = p.price <= maxPrice;
+                return matchCat && matchSpec && matchSearch && matchPrice;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-400"><i class="fas fa-search text-4xl mb-2"></i><p>Nenhum lanche encontrado com os filtros selecionados.</p></div>`;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const isFav = db.favorites.includes(p.id);
+                let badgeHtml = '';
+                if (p.status === 'promo') badgeHtml = `<span class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-md">Promoção</span>`;
+                else if (p.status === 'best') badgeHtml = `<span class="absolute top-2 left-2 bg-yellow-500 text-black text-[10px] font-black uppercase px-2 py-0.5 rounded-md">Mais Vendido</span>`;
+                else if (p.status === 'featured') badgeHtml = `<span class="absolute top-2 left-2 bg-purple-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-md">Destaque</span>`;
+
+                grid.innerHTML += `
+                    <div class="bg-[--menu-bg] rounded-2xl overflow-hidden shadow-md border dark:border-gray-800 flex flex-col relative group">
+                        ${badgeHtml}
+                        <button onclick="toggleFavorite(${p.id})" class="absolute top-2 right-2 text-xl z-10 text-white drop-shadow-md focus:outline-none">
+                            <i class="${isFav ? 'fas text-red-500' : 'far text-white'} fa-heart"></i>
+                        </button>
+                        <div class="h-40 overflow-hidden bg-gray-100">
+                            <img src="${sanitize(p.img)}" alt="${sanitize(p.name)}" class="w-full h-full object-cover group-hover:scale-105 smooth-anim" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80'">
+                        </div>
+                        <div class="p-4 flex flex-col flex-1">
+                            <div class="flex justify-between items-start mb-1">
+                                <h4 class="font-bold text-base line-clamp-1">${sanitize(p.name)}</h4>
+                                <button onclick="shareProduct('${sanitize(p.name)}')" class="text-xs text-gray-400 hover:text-[--primary] ml-1"><i class="fas fa-share-alt"></i></button>
+                            </div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-3 flex-1">${sanitize(p.desc)}</p>
+                            <div class="flex items-center justify-between mt-auto pt-2 border-t border-gray-100 dark:border-gray-800">
+                                <span class="text-lg font-black text-[--primary]">R$ ${parseFloat(p.price).toFixed(2)}</span>
+                                <button onclick="addToCart(${p.id})" class="bg-[--btn-bg] hover:opacity-90 text-white text-xs font-bold px-3 py-1.5 rounded-xl smooth-anim flex items-center space-x-1">
+                                    <i class="fas fa-shopping-cart"></i> <span>Comprar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Cart Architecture Control Functions
+        function addToCart(id) {
+            const prod = db.products.find(p => p.id === id);
+            if (!prod) return;
+            const existing = cart.find(item => item.product.id === id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ product: prod, qty: 1 });
+            }
+            updateCartSummary();
+            showNotification(`${prod.name} adicionado ao carrinho!`);
+        }
+
+        function changeCartQty(id, delta) {
+            const item = cart.find(i => i.product.id === id);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(i => i.product.id !== id);
+            }
+            updateCartSummary();
+        }
+
+        function updateCartSummary() {
+            let count = 0;
+            let subtotal = 0;
+            const container = document.getElementById('cartItemsContainer');
+            container.innerHTML = '';
+
+            cart.forEach(item => {
+                count += item.qty;
+                const itemTotal = item.product.price * item.qty;
+                subtotal += itemTotal;
+
+                container.innerHTML += `
+                    <div class="flex items-center space-x-3 border-b dark:border-gray-800 pb-3 text-xs">
+                        <img src="${sanitize(item.product.img)}" class="w-12 h-12 object-cover rounded-lg bg-gray-200">
+                        <div class="flex-1">
+                            <h5 class="font-bold line-clamp-1">${sanitize(item.product.name)}</h5>
+                            <span class="text-gray-500 font-medium">R$ ${parseFloat(item.product.price).toFixed(2)}</span>
+                        </div>
+                        <div class="flex items-center space-x-2 border dark:border-gray-700 rounded-lg overflow-hidden">
+                            <button onclick="changeCartQty(${item.product.id}, -1)" class="px-2 py-0.5 bg-gray-100 dark:bg-zinc-800 font-bold hover:bg-gray-200">-</button>
+                            <span class="font-bold text-sm px-1">${item.qty}</span>
+                            <button onclick="changeCartQty(${item.product.id}, 1)" class="px-2 py-0.5 bg-gray-100 dark:bg-zinc-800 font-bold hover:bg-gray-200">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('cartCount').innerText = count;
+            document.getElementById('cartSubtotal').innerText = `R$ ${subtotal.toFixed(2)}`;
+            
+            const deliveryTax = subtotal > 0 ? parseFloat(db.storeInfo.taxa) : 0;
+            document.getElementById('cartDelivery').innerText = `R$ ${deliveryTax.toFixed(2)}`;
+
+            // Check Coupon Code Discount Values
+            let discPct = 0;
+            const savedCoupon = sessionStorage.getItem('gi_active_coupon');
+            if (savedCoupon) {
+                const cp = db.categories; // fallback check mock
+                const found = db.coupons.find(c => c.code.toUpperCase() === savedCoupon.toUpperCase());
+                if (found) {
+                    discPct = parseFloat(found.discount);
+                    document.getElementById('couponMessage').innerText = `Cupom ${found.code} aplicado: ${discPct}% de desconto`;
+                    document.getElementById('couponMessage').classList.remove('hidden');
+                }
+            }
+
+            let finalTotal = (subtotal + deliveryTax);
+            if (discPct > 0) {
+                finalTotal = finalTotal - (subtotal * (discPct / 100));
+            }
+            if (finalTotal < 0) finalTotal = 0;
+
+            document.getElementById('cartTotal').innerText = `R$ ${finalTotal.toFixed(2)}`;
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('couponInput').value.trim().toUpperCase();
+            const found = db.coupons.find(c => c.code.toUpperCase() === code);
+            if (found) {
+                sessionStorage.setItem('gi_active_coupon', code);
+                showNotification(`Cupom ${code} validado com sucesso!`);
+                updateCartSummary();
+            } else {
+                showNotification("Cupom inválido ou expirado.");
+                sessionStorage.removeItem('gi_active_coupon');
+                document.getElementById('couponMessage').classList.add('hidden');
+                updateCartSummary();
+            }
+        }
+
+        function checkoutOrder() {
+            if (cart.length === 0) {
+                showNotification("Seu carrinho está vazio!");
+                return;
+            }
+            const name = document.getElementById('orderName').value.trim();
+            const address = document.getElementById('orderAddress').value.trim();
+
+            if (!name || !address) {
+                showNotification("Preencha seu Nome e Endereço para entrega.");
+                return;
+            }
+
+            let subtotal = 0;
+            let itemsText = '';
+            cart.forEach(item => {
+                subtotal += item.product.price * item.qty;
+                itemsText += `- ${item.qty}x ${item.product.name} (R$ ${(item.product.price*item.qty).toFixed(2)})\n`;
+            });
+
+            if (subtotal < parseFloat(db.storeInfo.minimo)) {
+                showNotification(`Pedido mínimo não alcançado! Valor mínimo: R$ ${parseFloat(db.storeInfo.minimo).toFixed(2)}`);
+                return;
+            }
+
+            // Persistence tracking record history save update stats analytics
+            const orderId = db.orders.length + 1;
+            const dateStr = new Date().toLocaleDateString('pt-BR');
+            const newOrder = {
+                id: orderId, date: dateStr, clientName: name, clientAddress: address,
+                items: cart.map(i => `${i.qty}x ${i.product.name}`),
+                total: document.getElementById('cartTotal').innerText, status: 'Recebido'
+            };
+            db.orders.push(newOrder);
+            saveAllToStorage();
+
+            // WhatsApp Message Engineering Layout Build Output
+            const textMsg = `*Novo Pedido - ${db.storeInfo.name}*\n\n` +
+                            `*Cliente:* ${name}\n` +
+                            `*Endereço:* ${address}\n\n` +
+                            `*Produtos:*\n${itemsText}\n` +
+                            `*Total do Pedido:* ${document.getElementById('cartTotal').innerText}\n\n` +
+                            `Obrigado pela preferência!`;
+
+            const encoded = encodeURIComponent(textMsg);
+            window.open(`https://wa.me/${db.social.whats}?text=${encoded}`, '_blank');
+
+            // Reset states safely clear structures
+            cart = [];
+            sessionStorage.removeItem('gi_active_coupon');
+            document.getElementById('orderName').value = '';
+            document.getElementById('orderAddress').value = '';
+            document.getElementById('couponInput').value = '';
+            document.getElementById('couponMessage').classList.add('hidden');
+            document.getElementById('cartSidebar').classList.remove('open');
+            updateCartSummary();
+            showNotification("Pedido enviado! Verifique sua janela do WhatsApp.");
+        }
+
+        // Reviews Dynamic Architecture System Logic
+        function renderReviews() {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = '';
+            let totalStars = 0;
+
+            db.reviews.forEach(r => {
+                totalStars += r.stars;
+                let starStr = '';
+                for (let i = 1; i <= 5; i++) {
+                    starStr += `<i class="${i <= r.stars ? 'fas' : 'far'} fa-star text-yellow-500"></i>`;
+                }
+                container.innerHTML += `
+                    <div class="bg-[--menu-bg] p-4 rounded-xl shadow-sm border dark:border-gray-800 text-xs">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-sm">${sanitize(r.author)}</span>
+                            <span class="text-gray-400 text-[10px]">${r.date}</span>
+                        </div>
+                        <div class="mb-2 text-[10px]">${starStr}</div>
+                        <p class="text-gray-600 dark:text-gray-300 italic">"${sanitize(r.comment)}"</p>
+                    </div>
+                `;
+            });
+
+            const avg = db.reviews.length ? (totalStars / db.reviews.length).toFixed(1) : "0.0";
+            document.getElementById('averageText').innerText = `${avg} (${db.reviews.length} avaliações)`;
+            
+            let avgStarsHtml = '';
+            const roundedAvg = Math.round(parseFloat(avg));
+            for (let i = 1; i <= 5; i++) {
+                avgStarsHtml += `<i class="${i <= roundedAvg ? 'fas' : 'far'} fa-star"></i>`;
+            }
+            document.getElementById('averageStars').innerHTML = avgStarsHtml;
+        }
+
+        function submitReview(e) {
+            e.preventDefault();
+            const author = document.getElementById('reviewAuthor').value.trim();
+            const comment = document.getElementById('reviewComment').value.trim();
+            if (!author || !comment) return;
+
+            const dateStr = new Date().toLocaleDateString('pt-BR');
+            db.reviews.unshift({ author, comment, stars: selectedReviewStars, date: dateStr });
+            saveAllToStorage();
+            renderReviews();
+
+            document.getElementById('reviewAuthor').value = '';
+            document.getElementById('reviewComment').value = '';
+            showNotification("Muito obrigado por seu feedback!");
+        }
+
+        // Favorites Share & Extra Utilities Layout Rules Functions
+        function toggleFavorite(id) {
+            if (db.favorites.includes(id)) {
+                db.favorites = db.favorites.filter(fid => fid !== id);
+                showNotification("Removido dos favoritos.");
+            } else {
+                db.favorites.push(id);
+                showNotification("Adicionado aos favoritos!");
+            }
+            saveAllToStorage();
+            renderProductsGrid();
+        }
+
+        function shareProduct(name) {
+            if (navigator.share) {
+                navigator.share({ title: name, text: `Olha que delícia esse lanche da Gem Icunim: ${name}!`, url: window.location.href })
+                .catch(() => showNotification("Erro ao compartilhar."));
+            } else {
+                navigator.clipboard.writeText(`${name} - Peça na Gem Icunim!`);
+                showNotification("Nome do lanche copiado para área de transferência!");
+            }
+        }
+
+        function showNotification(msg) {
+            const el = document.getElementById('notification');
+            document.getElementById('notificationText').innerText = msg;
+            el.className = el.className.replace('translate-y-[-100px]', 'translate-y-0').replace('opacity-0', 'opacity-100');
+            setTimeout(() => {
+                el.className = el.className.replace('translate-y-0', 'translate-y-[-100px]').replace('opacity-100', 'opacity-0');
+            }, 3000);
+        }
+
+        function close404() {
+            document.getElementById('error404Page').classList.add('hidden');
+        }
+
+        // Admin Auth Workspace Tab Engine Management Controller Logic
+        function closeAdminPanel() { document.getElementById('adminPanelModal').classList.add('hidden'); }
+        function logoutAdmin() {
+            document.getElementById('adminWorkspace').classList.add('hidden');
+            document.getElementById('adminLoginBox').classList.remove('hidden');
+            showNotification("Sessão admin encerrada.");
+        }
+
+        function attemptAdminLogin() {
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+            if (u === db.credentials.user && p === db.credentials.pass) {
+                document.getElementById('adminLoginBox').classList.add('hidden');
+                document.getElementById('adminWorkspace').classList.remove('hidden');
+                showNotification("Autenticado com Sucesso!");
+                loadAdminDashboardData();
+                switchAdminTab('dash');
+            } else {
+                showNotification("Usuário ou Senha incorretos!");
+            }
+        }
+
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.classList.remove('text-[--primary]', 'bg-gray-200', 'dark:bg-gray-800');
+                if(btn.getAttribute('data-tab') === tabId) {
+                    btn.classList.add('text-[--primary]', 'bg-gray-200', 'dark:bg-gray-800');
+                }
+            });
+            document.querySelectorAll('.admin-tab-view').forEach(view => view.classList.add('hidden'));
+            document.getElementById(`adminTab_${tabId}`).classList.remove('hidden');
+            
+            // Context Loaders for specialized internal tabs panels
+            if (tabId === 'prods') renderAdminProductsTable();
+            if (tabId === 'orders') renderAdminOrdersTable();
+            if (tabId === 'clients') renderAdminClientsTable();
+            if (tabId === 'coupons') renderAdminCouponsTable();
+            if (tabId === 'banner') loadBannerTabInputs();
+            if (tabId === 'social') loadSocialTabInputs();
+            if (tabId === 'storeinfo') loadStoreInfoTabInputs();
+            if (tabId === 'colors') loadColorsTabInputs();
+            if (tabId === 'config') loadConfigTabInputs();
+        }
+
+        function loadAdminDashboardData() {
+            document.getElementById('statOrdersCount').innerText = db.orders.length;
+            document.getElementById('statProductsCount').innerText = db.products.length;
+            
+            const uniqueClients = [...new Set(db.orders.map(o => o.clientName.trim()))];
+            document.getElementById('statClientsCount').innerText = uniqueClients.length;
+
+            let rev = 0;
+            db.orders.forEach(o => {
+                if (o.status !== 'Cancelar') {
+                    const cleanNum = parseFloat(o.total.replace('R$', '').replace(',', '.').trim()) || 0;
+                    rev += cleanNum;
+                }
+            });
+            document.getElementById('statRevenue').innerText = `R$ ${rev.toFixed(2)}`;
+        }
+
+        // Product CRUD sub-functions inside Workspace Context Canvas views
+        function renderAdminProductsTable() {
+            const body = document.getElementById('adminProductsTableBody');
+            body.innerHTML = '';
+            db.products.forEach(p => {
+                body.innerHTML += `
+                    <tr class="border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-zinc-900">
+                        <td class="p-3"><img src="${sanitize(p.img)}" class="w-8 h-8 object-cover rounded"></td>
+                        <td class="p-3 font-semibold">${sanitize(p.name)}</td>
+                        <td class="p-3">${sanitize(p.category)}</td>
+                        <td class="p-3 font-bold">R$ ${parseFloat(p.price).toFixed(2)}</td>
+                        <td class="p-3 uppercase text-[10px] font-bold text-gray-500">${p.status}</td>
+                        <td class="p-3 text-center space-x-1 whitespace-nowrap">
+                            <button onclick="openProductFormModal(${p.id})" class="bg-blue-600 text-white px-2 py-1 rounded hover:opacity-80"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteProduct(${p.id})" class="bg-red-600 text-white px-2 py-1 rounded hover:opacity-80"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openProductFormModal(id = null) {
+            const catSel = document.getElementById('crudProdCategory');
+            catSel.innerHTML = '';
+            db.categories.forEach(c => catSel.innerHTML += `<option value="${c}">${c}</option>`);
+
+            if (id) {
+                const p = db.products.find(prod => prod.id === id);
+                document.getElementById('productModalTitle').innerText = "Editar Lanche";
+                document.getElementById('crudProdId').value = p.id;
+                document.getElementById('crudProdName').value = p.name;
+                document.getElementById('crudProdCategory').value = p.category;
+                document.getElementById('crudProdImg').value = p.img;
+                document.getElementById('crudProdPrice').value = p.price;
+                document.getElementById('crudProdStatus').value = p.status;
+                document.getElementById('crudProdDesc').value = p.desc;
+            } else {
+                document.getElementById('productModalTitle').innerText = "Adicionar Novo Lanche";
+                document.getElementById('crudProdId').value = '';
+                document.getElementById('crudProdName').value = '';
+                document.getElementById('crudProdImg').value = '';
+                document.getElementById('crudProdPrice').value = '';
+                document.getElementById('crudProdStatus').value = 'normal';
+                document.getElementById('crudProdDesc').value = '';
+            }
+            document.getElementById('productCrudModal').classList.remove('hidden');
+        }
+
+        function closeProductFormModal() { document.getElementById('productCrudModal').classList.add('hidden'); }
+
+        function saveProductCrudForm() {
+            const id = document.getElementById('crudProdId').value;
+            const name = document.getElementById('crudProdName').value.trim();
+            const category = document.getElementById('crudProdCategory').value;
+            const img = document.getElementById('crudProdImg').value.trim();
+            const price = parseFloat(document.getElementById('crudProdPrice').value) || 0;
+            const status = document.getElementById('crudProdStatus').value;
+            const desc = document.getElementById('crudProdDesc').value.trim();
+
+            if (!name || !img || !price || !desc) {
+                showNotification("Preencha todos os campos obrigatórios do produto!");
+                return;
+            }
+
+            if (id) {
+                // update mode action execution logic loop
+                const idx = db.products.findIndex(p => p.id == id);
+                if (idx !== -1) {
+                    db.products[idx] = { id: parseInt(id), name, category, img, price, status, desc };
+                }
+            } else {
+                // insert mode logic
+                const newId = db.products.length ? Math.max(...db.products.map(p => p.id)) + 1 : 1;
+                db.products.push({ id: newId, name, category, img, price, status, desc });
+            }
+
+            saveAllToStorage();
+            closeProductFormModal();
+            renderAdminProductsTable();
+            loadAdminDashboardData();
+            renderProductsGrid();
+            showNotification("Produto salvo com sucesso!");
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Tem certeza que deseja excluir permanentemente este produto do cardápio?")) {
+                db.products = db.products.filter(p => p.id !== id);
+                saveAllToStorage();
+                renderAdminProductsTable();
+                loadAdminDashboardData();
+                renderProductsGrid();
+                showNotification("Produto removido.");
+            }
+        }
+
+        // Orders List Tab Workspace Subroutines Logic Implementation
+        function renderAdminOrdersTable() {
+            const body = document.getElementById('adminOrdersTableBody');
+            body.innerHTML = '';
+            db.orders.forEach(o => {
+                body.innerHTML += `
+                    <tr class="border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-zinc-900">
+                        <td class="p-3 font-semibold">#${o.id}<br><span class="text-[10px] text-gray-400 font-normal">${o.date}</span></td>
+                        <td class="p-3 font-medium">${sanitize(o.clientName)}<br><span class="text-[10px] text-gray-400 font-normal">${sanitize(o.clientAddress)}</span></td>
+                        <td class="p-3 text-gray-600 dark:text-gray-400">${o.items.join(', ')}</td>
+                        <td class="p-3 font-bold text-[--primary]">${o.total}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-0.5 rounded font-bold text-[10px] ${o.status==='Entregue'?'bg-green-100 text-green-700':o.status==='Cancelar'?'bg-red-100 text-red-700':'bg-yellow-100 text-yellow-700'}">${o.status}</span>
+                        </td>
+                        <td class="p-3 text-center whitespace-nowrap">
+                            <select onchange="updateOrderStatus(${o.id}, this.value)" class="text-[11px] border rounded bg-[--menu-bg] px-1 py-0.5">
+                                <option value="">Alterar Status</option>
+                                <option value="Recebido">Recebido</option>
+                                <option value="Preparando">Preparando</option>
+                                <option value="Saiu para entrega">Saiu para entrega</option>
+                                <option value="Entregue">Entregue</option>
+                                <option value="Cancelar">Cancelar</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function updateOrderStatus(id, newStatus) {
+            if(!newStatus) return;
+            const o = db.orders.find(ord => ord.id === id);
+            if (o) {
+                o.status = newStatus;
+                saveAllToStorage();
+                renderAdminOrdersTable();
+                loadAdminDashboardData();
+                showNotification(`Status do pedido #${id} atualizado.`);
+            }
+        }
+
+        // Render remaining Admin tabs panels structures elements view templates
+        function renderAdminClientsTable() {
+            const body = document.getElementById('adminClientsTableBody');
+            body.innerHTML = '';
+            const clientsMap = {};
+            db.orders.forEach(o => {
+                if(!clientsMap[o.clientName]) {
+                    clientsMap[o.clientName] = { address: o.clientAddress, count: 0 };
+                }
+                clientsMap[o.clientName].count++;
+            });
+            Object.keys(clientsMap).forEach(name => {
+                body.innerHTML += `
+                    <tr class="border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-zinc-900">
+                        <td class="p-3 font-semibold">${sanitize(name)}</td>
+                        <td class="p-3 text-gray-500">${sanitize(clientsMap[name].address)}</td>
+                        <td class="p-3 text-center font-bold text-blue-500">${clientsMap[name].count}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderAdminCouponsTable() {
+            const body = document.getElementById('adminCouponsTableBody');
+            body.innerHTML = '';
+            db.coupons.forEach((c, idx) => {
+                body.innerHTML += `
+                    <tr class="border-b dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-zinc-900">
+                        <td class="p-3 font-bold text-purple-600">${sanitize(c.code)}</td>
+                        <td class="p-3 font-semibold">${c.discount}%</td>
+                        <td class="p-3 text-center"><button onclick="deleteCoupon(${idx})" class="text-red-600 hover:text-red-800"><i class="fas fa-trash-alt"></i></button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function addCouponPrompt() {
+            const code = prompt("Digite o código do cupom (Ex: MEGALANCHE):");
+            if(!code) return;
+            const discount = parseInt(prompt("Digite a porcentagem de desconto (Ex: 15):")) || 0;
+            if(discount <= 0 || discount > 100) {
+                alert("Desconto inválido!");
+                return;
+            }
+            db.coupons.push({ code: code.toUpperCase().trim(), discount });
+            saveAllToStorage();
+            renderAdminCouponsTable();
+            showNotification("Cupom criado!");
+        }
+
+        function deleteCoupon(idx) {
+            db.coupons.splice(idx, 1);
+            saveAllToStorage();
+            renderAdminCouponsTable();
+            showNotification("Cupom deletado.");
+        }
+
+        // Tab Data Mappers fields functions binding loaders components
+        function loadBannerTabInputs() {
+            document.getElementById('cfgBannerTitle').value = db.banner.title;
+            document.getElementById('cfgBannerSlogan').value = db.banner.slogan;
+            document.getElementById('cfgBannerImg').value = db.banner.img;
+        }
+        function saveBannerConfig() {
+            db.banner.title = document.getElementById('cfgBannerTitle').value.trim();
+            db.banner.slogan = document.getElementById('cfgBannerSlogan').value.trim();
+            db.banner.img = document.getElementById('cfgBannerImg').value.trim();
+            saveAllToStorage(); renderUI(); showNotification("Banner atualizado!");
+        }
+
+        function loadSocialTabInputs() {
+            document.getElementById('cfgSocialWhats').value = db.social.whats;
+            document.getElementById('cfgSocialInsta').value = db.social.insta;
+            document.getElementById('cfgSocialFace').value = db.social.face;
+            document.getElementById('cfgSocialTik').value = db.social.tik;
+            document.getElementById('cfgSocialYou').value = db.social.you;
+            document.getElementById('cfgSocialEmail').value = db.social.email;
+            document.getElementById('cfgSocialTel').value = db.social.tel;
+        }
+        function saveSocialConfig() {
+            db.social.whats = document.getElementById('cfgSocialWhats').value.trim();
+            db.social.insta = document.getElementById('cfgSocialInsta').value.trim();
+            db.social.face = document.getElementById('cfgSocialFace').value.trim();
+            db.social.tik = document.getElementById('cfgSocialTik').value.trim();
+            db.social.you = document.getElementById('cfgSocialYou').value.trim();
+            db.social.email = document.getElementById('cfgSocialEmail').value.trim();
+            db.social.tel = document.getElementById('cfgSocialTel').value.trim();
+            saveAllToStorage(); renderUI(); showNotification("Canais sociais atualizados!");
+        }
+
+        function loadStoreInfoTabInputs() {
+            document.getElementById('cfgStoreName').value = db.storeInfo.name;
+            document.getElementById('cfgStoreAddress').value = db.storeInfo.address;
+            document.getElementById('cfgStoreCity').value = db.storeInfo.city;
+            document.getElementById('cfgStoreCep').value = db.storeInfo.cep;
+            document.getElementById('cfgStoreHorario').value = db.storeInfo.horario;
+            document.getElementById('cfgStoreTaxa').value = db.storeInfo.taxa;
+            document.getElementById('cfgStoreMinimo').value = db.storeInfo.minimo;
+            document.getElementById('cfgStoreTempo').value = db.storeInfo.tempo;
+        }
+        function saveStoreInfoConfig() {
+            db.storeInfo.name = document.getElementById('cfgStoreName').value.trim();
+            db.storeInfo.address = document.getElementById('cfgStoreAddress').value.trim();
+            db.storeInfo.city = document.getElementById('cfgStoreCity').value.trim();
+            db.storeInfo.cep = document.getElementById('cfgStoreCep').value.trim();
+            db.storeInfo.horario = document.getElementById('cfgStoreHorario').value.trim();
+            db.storeInfo.taxa = parseFloat(document.getElementById('cfgStoreTaxa').value) || 0;
+            db.storeInfo.minimo = parseFloat(document.getElementById('cfgStoreMinimo').value) || 0;
+            db.storeInfo.tempo = document.getElementById('cfgStoreTempo').value.trim();
+            saveAllToStorage(); renderUI(); showNotification("Informações corporativas salvas!");
+        }
+
+        function loadColorsTabInputs() {
+            document.getElementById('clrPrimary').value = db.cores.primary;
+            document.getElementById('clrBtn').value = db.cores.btn;
+        }
+        function saveColorsConfig() {
+            db.cores.primary = document.getElementById('clrPrimary').value;
+            db.cores.btn = document.getElementById('clrBtn').value;
+            saveAllToStorage(); renderUI(); showNotification("Visual do layout redefinido!");
+        }
+
+        function loadConfigTabInputs() {
+            document.getElementById('cfgAdminUser').value = db.credentials.user;
+            document.getElementById('cfgAdminPass').value = db.credentials.pass;
+        }
+        function saveAdminCredentials() {
+            const user = document.getElementById('cfgAdminUser').value.trim();
+            const pass = document.getElementById('cfgAdminPass').value.trim();
+            if(user.length < 3 || pass.length < 4) {
+                showNotification("Usuário ou senha muito curtos!"); return;
+            }
+            db.credentials.user = user; db.credentials.pass = pass;
+            saveAllToStorage(); showNotification("Credenciais administrativas redefinidas!");
+        }
+
+        function exportDatabaseJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "gemicunim_backup_database.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click(); downloadAnchor.remove();
+        }
+        function importDatabaseJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if(parsed.products && parsed.storeInfo) {
+                        db = parsed; saveAllToStorage(); renderUI();
+                        showNotification("Backup importado e restaurado com sucesso!");
+                        closeAdminPanel();
+                    } else { alert("Estrutura JSON inválida para restauração."); }
+                } catch(err) { alert("Erro ao ler arquivo JSON."); }
+            };
+            reader.readAsText(file);
+        }
+        function clearDatabaseFull() {
+            if(confirm("ATENÇÃO: Deseja apagar ABSOLUTAMENTE TODOS OS DADOS do site e redefinir para o padrão de fábrica?")) {
+                localStorage.clear(); initDatabase(); renderUI();
+                showNotification("Banco de dados resetado."); closeAdminPanel();
+            }
+        }
+
+        // Global Architectural Event Hooks Bindings Lifecycle Setup
+        window.addEventListener('DOMContentLoaded', () => {
+            initDatabase();
+            renderUI();
+            
+            // Turn off loading screen cleanly animate transition
+            setTimeout(() => {
+                const loader = document.getElementById('loading');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 800);
+
+            // Wiring theme switcher toggle mechanism rules
+            const themeBtn = document.getElementById('themeToggle');
+            themeBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark');
+                const isDark = document.body.classList.contains('dark');
+                document.getElementById('themeIcon').className = isDark ? "fas fa-sun" : "fas fa-moon";
+            });
+
+            // Shopping Cart toggle layout controls triggers open close wire
+            document.getElementById('cartToggle').addEventListener('click', () => {
+                document.getElementById('cartSidebar').classList.add('open');
+            });
+            document.getElementById('closeCart').addEventListener('click', () => {
+                document.getElementById('cartSidebar').classList.remove('open');
+            });
+
+            // Administrative access panel window opener mechanism link
+            document.getElementById('adminLoginBtn').addEventListener('click', () => {
+                document.getElementById('adminPanelModal').classList.remove('hidden');
+            });
+
+            // Instant Search Live Execution Event Query Key Bindings Engine Hooks
+            document.getElementById('searchBar').addEventListener('input', renderProductsGrid);
+            document.getElementById('priceFilter').addEventListener('input', renderProductsGrid);
+
+            // Review form star selection mechanism wiring mapping setup triggers loop
+            const stars = document.querySelectorAll('#starRatingSelect i');
+            stars.forEach(s => {
+                s.addEventListener('click', (e) => {
+                    const val = parseInt(e.target.getAttribute('data-val'));
+                    selectedReviewStars = val;
+                    stars.forEach(st => {
+                        const sv = parseInt(st.getAttribute('data-val'));
+                        st.className = sv <= val ? "fas fa-star cursor-pointer hover:text-yellow-500 text-yellow-500" : "fas fa-star cursor-pointer hover:text-yellow-500";
+                    });
+                });
+            });
+
+            // Back to top sticky button tracking logic scrolling animation triggers hook
+            const scrollTopBtn = document.getElementById('scrollToTopBtn');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 400) {
+                    scrollTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    scrollTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                }
+            });
+            scrollTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+print("File generated successfully")
